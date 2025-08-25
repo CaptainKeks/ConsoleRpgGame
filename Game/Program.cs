@@ -1,5 +1,4 @@
-﻿
-using Game.Charakters;
+﻿using Game.Charakters;
 using Game.Combat;
 using Game.Helper;
 using Game.Menus;

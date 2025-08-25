@@ -83,19 +83,18 @@ class FightMenu : Menu
         }
     }
 
-
     private void FightLevel(Charakter player, List<Charakter> enemies, CombatValues cmb, out bool isFinished, out bool isLevelFinished)
     {
         DisplayMenu(player, enemies);
         PrintRoundAndTurn(cmb);
-        PrintPlayerMoveMenu(player, enemies);
+        PrintAndPlayerMove(player, enemies);
         (isFinished, isLevelFinished) = TryIfHealthIsZero(player, enemies, cmb);
         Console.Clear();
 
         DisplayMenu(player, enemies);
         cmb.Turn++;
         PrintRoundAndTurn(cmb);
-        PrintEnemeyMoveMenu(player, enemies);
+        PrintAndEnemyMove(player, enemies);
         (isFinished, isLevelFinished) = TryIfHealthIsZero(player, enemies, cmb);
         player.InDefensePosition = false;
         SaveAndLoadJson.SaveGame(player);
@@ -113,7 +112,7 @@ class FightMenu : Menu
         Console.WriteLine($"Runde: {cmb.Round} Zug: {cmb.Turn}                          ");
         Console.ForegroundColor = ConsoleColor.White;
     }
-    private void PrintEnemeyMoveMenu(Charakter player, List<Charakter> enemies)
+    private void PrintAndEnemyMove(Charakter player, List<Charakter> enemies)
     {
         Console.WriteLine("Der/Die Gegner ist/sind am Zug.");
         Console.WriteLine();
@@ -122,7 +121,7 @@ class FightMenu : Menu
         Console.Write("Drücke [Enter] für den nächsten Zug.");
     }
 
-    private void PrintPlayerMoveMenu(Charakter player, List<Charakter> enemies)
+    private void PrintAndPlayerMove(Charakter player, List<Charakter> enemies)
     {
         Console.WriteLine("Dein Zug. Wähle eine Aktion: ");
         Console.WriteLine("[1] Angreifen");
@@ -196,7 +195,7 @@ class FightMenu : Menu
                     Menu nextMenu = new UseItemMenu(player, out bool noItemUsed);
                     DisplayMenu(player, enemies);
                     if (noItemUsed)
-                        PrintPlayerMoveMenu(player, enemies);
+                        PrintAndPlayerMove(player, enemies);
                     validInput = true;
                     break;
                 case "4":

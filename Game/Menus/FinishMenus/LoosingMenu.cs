@@ -1,6 +1,4 @@
 ﻿
-using Game.Charakters;
-
 namespace Game.Menus.FinishMenus;
 
 class LoosingMenu : Menu

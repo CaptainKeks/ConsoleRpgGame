@@ -1,5 +1,4 @@
 ﻿using Game.Charakters;
-
 namespace Game.Menus;
 
 class StartMenu : Menu

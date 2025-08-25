@@ -1,5 +1,4 @@
-﻿
-using Game.Charakters;
+﻿using Game.Charakters;
 
 namespace Game.Menus;
 

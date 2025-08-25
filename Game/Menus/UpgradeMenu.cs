@@ -1,7 +1,5 @@
-﻿
-using Game.Charakters;
+﻿using Game.Charakters;
 using Game.Helper;
-
 namespace Game.Menus;
 
 class UpgradeMenu : Menu
