@@ -20,7 +20,7 @@ class StartMenu : Menu
         Console.ForegroundColor = ConsoleColor.Green;
         Console.Write($"Wins: {player.MetaProgression.Wins}");
         Console.ForegroundColor = ConsoleColor.DarkRed;
-        Console.WriteLine($" Looses: {player.MetaProgression.Losses}");
+        Console.WriteLine($" Losses: {player.MetaProgression.Losses}");
         Console.ForegroundColor = ConsoleColor.White;
         Console.WriteLine("---------------------");
         Console.WriteLine();

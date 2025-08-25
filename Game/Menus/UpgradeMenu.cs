@@ -25,7 +25,8 @@ class UpgradeMenu : Menu
         Console.WriteLine($"[1] Attack + 1  (Aktueller Wert: {player.MetaProgression.Attack})");
         Console.WriteLine($"[2] Defense + 1 (Aktueller Wert: {player.MetaProgression.Defense})");
         Console.WriteLine($"[3] Wisdom + 1  (Aktueller Wert: {player.MetaProgression.Wisdom})");
-        Console.WriteLine("[4] zurück");
+        Console.WriteLine($"[4] Health + 5  (Aktueller Wert: {player.MetaProgression.Health})");
+        Console.WriteLine("[5] Zurück");
         HandleInput(player);
     }
 
@@ -58,6 +59,12 @@ class UpgradeMenu : Menu
                     validInput = true;
                     break;
                 case "4":
+                    player.UpgradeBaseValue(BaseValue.Health);
+                    nextMenu = new UpgradeMenu(player);
+                    Programm.HandleInput(player);
+                    validInput = true;
+                    break;
+                case "5":
                     SaveAndLoadJson.SaveGame(player);
                     nextMenu = new StartMenu(player);
                     Programm.HandleInput(player);

@@ -21,8 +21,8 @@ class EnemyGenerator
         Random rnd = new Random();
         enemie.Name = "Orga";
         enemie.Class = @class;
-        enemie.MaxHealth = (enemie.GetMaxHealthValue() - 8) + (3 * cmb.Level);
+        enemie.MaxHealth = (enemie.GetMaxHealthValue() - 8) + (4 * cmb.Level);
         enemie.CurrentHealth = enemie.MaxHealth;
-        enemie.Class.AttackModifier = rnd.Next((int)enemie.Class.AttackModifier + cmb.Level - 2, (int)enemie.Class.AttackModifier + cmb.Level + 2);
+        enemie.Class.AttackModifier = rnd.Next((int)(enemie.Class.AttackModifier + (cmb.Level * 1.5) - 2), (int)(enemie.Class.AttackModifier + (cmb.Level * 1.5) + 2));
     }
 }

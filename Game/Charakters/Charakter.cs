@@ -1,20 +1,12 @@
 ﻿
-using Game.Helper;
-using System;
-using System.ComponentModel.Design;
-using System.Net.NetworkInformation;
-using System.Reflection.Metadata;
-using System.Security;
-using System.Security.AccessControl;
-using System.Threading;
-
 namespace Game.Charakters;
 
 public enum BaseValue
 {
     Attack,
     Defense,
-    Wisdom
+    Wisdom,
+    Health
 }
 
 class Charakter : IEntity
@@ -30,7 +22,7 @@ class Charakter : IEntity
     public Class Class { get; set; }
     public bool IsLoadedFromFile { get; set; } = false;
     public List<Item> Inventory { get; set; } = [];
-    public MetaProgression MetaProgression { get; set; } = new MetaProgression(0, 0, 0, 0, 0, 0, 20);
+    public MetaProgression MetaProgression { get; set; } = new MetaProgression(attack: 0, defense: 0, wisdom: 0, health: 0, gold: 0, wins: 0, losses: 0, price: 20);
 
     /// <summary>
     /// Attackiert den mitgegeben Charakter und zieht die Defence von der Attacke ab.
@@ -38,7 +30,7 @@ class Charakter : IEntity
     /// <param name="defender"></param>
     public void Attack(Charakter defender)
     {
-        var realDamage = GetAttackValue() - defender.GetDefenceValue();
+        var realDamage = GetAttackValue() - defender.GetDefenseValue();
         realDamage = defender.InDefensePosition ? realDamage / 2 : realDamage;
         realDamage = realDamage < 0 ? 0 : realDamage;
         defender.CurrentHealth -= realDamage;
@@ -49,11 +41,12 @@ class Charakter : IEntity
 
     public void SpecialAttack(Charakter defender)
     {
-        var realDamage = (GetSpecialAttackValue() - defender.GetDefenceValue());
+        var realDamage = (GetSpecialAttackValue() - defender.GetDefenseValue());
         realDamage = defender.InDefensePosition ? realDamage / 2 : realDamage;
         realDamage = realDamage < 0 ? 0 : realDamage;
         defender.CurrentHealth -= realDamage;
         defender.CurrentHealth = defender.CurrentHealth < 0 ? 0 : defender.CurrentHealth;
+        defender.InDefensePosition = false;
         Console.WriteLine($"Ich {Name} führe meine SPEZIALATTACKE aus auf {defender.Name} mit {GetSpecialAttackValue():F2} AttackDamage!");
         PrintAttackMessage(defender, realDamage);
     }
@@ -83,14 +76,14 @@ class Charakter : IEntity
         return (BaseAttack + MetaProgression.Attack + Class.SpecialAttackModifier + CurrentHealth * 0.1) * GetWisdomValue();
     }
 
-    public double GetDefenceValue()
+    public double GetDefenseValue()
     {
         return (BaseDefence + MetaProgression.Defense + Class.DefenceModifier) * GetWisdomValue();
     }
 
     public double GetMaxHealthValue()
     {
-        return (MaxHealth + Class.HealthModifier) * GetWisdomValue();
+        return (MaxHealth + MetaProgression.Health + Class.HealthModifier) * GetWisdomValue();
     }
     public double GetWisdomValue()
     {
@@ -148,26 +141,29 @@ class Charakter : IEntity
         switch (baseValue)
         {
             case BaseValue.Attack:
-                UpgradeBaseValues(MetaProgression, m => m.Attack, (m, v) => m.Attack = v, "Attack");
+                UpgradeBaseValues(MetaProgression, m => m.Attack, (m, v) => m.Attack = v, "Attack", 1);
                 Console.ReadKey();
                 break;
             case BaseValue.Defense:
-                UpgradeBaseValues(MetaProgression, m => m.Defense, (m, v) => m.Defense = v, "Defense");
+                UpgradeBaseValues(MetaProgression, m => m.Defense, (m, v) => m.Defense = v, "Defense", 1);
                 Console.ReadKey();
                 break;
             case BaseValue.Wisdom:
-                UpgradeBaseValues(MetaProgression, m => m.Wisdom, (m, v) => m.Wisdom = v, "Wisdom");
+                UpgradeBaseValues(MetaProgression, m => m.Wisdom, (m, v) => m.Wisdom = v, "Wisdom", 1);
                 Console.ReadKey();
+                break;
+            case BaseValue.Health:
+                UpgradeBaseValues(MetaProgression, m => m.Health, (m, v) => m.Health = v, "Health", 5);
                 break;
             default:
                 break;
         }
     }
 
-    private void UpgradeBaseValues(MetaProgression meta, Func<MetaProgression, double> getter, Action<MetaProgression, double> setter, string label)
+    private void UpgradeBaseValues(MetaProgression meta, Func<MetaProgression, double> getter, Action<MetaProgression, double> setter, string label, int increment)
     {
         var current = getter(meta);
-        setter(meta, current + 1);
+        setter(meta, current + increment);
         meta.Gold -= meta.Price;
         meta.Price += 15;
         Console.ForegroundColor = ConsoleColor.Cyan;

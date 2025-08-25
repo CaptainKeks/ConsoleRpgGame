@@ -70,6 +70,7 @@ class FightMenu : Menu
                 newEnemies = generatedEnemies.Enemies;
             }
             isLevelFinished = false;
+            cmb.Turn = 0;
             cmb.Turn++;
             cmb.Round++;
             FightLevel(player, newEnemies, cmb, out isFinished, out isLevelFinished);
