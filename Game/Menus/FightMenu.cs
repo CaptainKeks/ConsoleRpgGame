@@ -13,7 +13,7 @@ class FightMenu : Menu
     {
         Console.ForegroundColor = ConsoleColor.Cyan;
         Console.WriteLine("Kampf beginnt:");
-        Console.ForegroundColor= ConsoleColor.White;
+        Console.ForegroundColor = ConsoleColor.White;
         Console.WriteLine("--------------");
         Console.WriteLine();
         Console.WriteLine($"Spieler: {player.Name} ({player.Class.ClassName}) HP: {player.CurrentHealth:F2}/{player.MaxHealth:F2}");
@@ -96,6 +96,7 @@ class FightMenu : Menu
         PrintRoundAndTurn(cmb);
         PrintEnemeyMoveMenu(player, enemies);
         (isFinished, isLevelFinished) = TryIfHealthIsZero(player, enemies, cmb);
+        player.InDefensePosition = false;
         SaveAndLoadJson.SaveGame(player);
         Console.ReadKey();
         Console.Clear();
@@ -198,6 +199,7 @@ class FightMenu : Menu
                     validInput = true;
                     break;
                 case "4":
+                    player.GetInDefensePosition();
                     validInput = true;
                     break;
                 case "5":

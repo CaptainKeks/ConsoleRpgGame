@@ -26,6 +26,7 @@ class Charakter : IEntity
     public double BaseWisdom { get; set; } = 0;
     public double MaxHealth { get; set; } = 30;
     public double CurrentHealth { get; set; }
+    public bool InDefensePosition { get; set; } = false;
     public Class Class { get; set; }
     public bool IsLoadedFromFile { get; set; } = false;
     public List<Item> Inventory { get; set; } = [];
@@ -38,25 +39,32 @@ class Charakter : IEntity
     public void Attack(Charakter defender)
     {
         var realDamage = GetAttackValue() - defender.GetDefenceValue();
+        realDamage = defender.InDefensePosition ? realDamage / 2 : realDamage;
         realDamage = realDamage < 0 ? 0 : realDamage;
         defender.CurrentHealth -= realDamage;
         defender.CurrentHealth = defender.CurrentHealth < 0 ? 0 : defender.CurrentHealth;
         Console.WriteLine($"Ich {Name} greife mit {GetAttackValue():F2} AttackDamage {defender.Name} an!");
-        Console.Write($"{defender.Name} bekommt ");
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.Write($"{realDamage:F2} ");
-        Console.ForegroundColor = ConsoleColor.White;
-        Console.Write("AttackDamage!");
-        Console.WriteLine();
+        PrintAttackMessage(defender, realDamage);
     }
 
     public void SpecialAttack(Charakter defender)
     {
         var realDamage = (GetSpecialAttackValue() - defender.GetDefenceValue());
+        realDamage = defender.InDefensePosition ? realDamage / 2 : realDamage;
         realDamage = realDamage < 0 ? 0 : realDamage;
         defender.CurrentHealth -= realDamage;
         defender.CurrentHealth = defender.CurrentHealth < 0 ? 0 : defender.CurrentHealth;
         Console.WriteLine($"Ich {Name} führe meine SPEZIALATTACKE aus auf {defender.Name} mit {GetSpecialAttackValue():F2} AttackDamage!");
+        PrintAttackMessage(defender, realDamage);
+    }
+    public void GetInDefensePosition()
+    {
+        InDefensePosition = true;
+        Console.WriteLine($"Ich {Name} gehe in die AbwehrPosition und bekomme bei meinem nächsten Angriff nur 50% Schaden.");
+    }
+
+    private void PrintAttackMessage(Charakter defender, double realDamage)
+    {
         Console.Write($"{defender.Name} bekommt ");
         Console.ForegroundColor = ConsoleColor.Red;
         Console.Write($"{realDamage:F2} ");
