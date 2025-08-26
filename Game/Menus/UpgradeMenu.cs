@@ -22,7 +22,7 @@ class UpgradeMenu : Menu
         Console.WriteLine();
         Console.WriteLine($"[1] Attack + 1  (Aktueller Wert: {player.MetaProgression.Attack})");
         Console.WriteLine($"[2] Defense + 1 (Aktueller Wert: {player.MetaProgression.Defense})");
-        Console.WriteLine($"[3] Wisdom + 1  (Aktueller Wert: {player.MetaProgression.Wisdom})");
+        Console.WriteLine($"[3] Wisdom + 0.1  (Aktueller Wert: {player.MetaProgression.Wisdom})");
         Console.WriteLine($"[4] Health + 5  (Aktueller Wert: {player.MetaProgression.Health})");
         Console.WriteLine("[5] Zurück");
         HandleInput(player);

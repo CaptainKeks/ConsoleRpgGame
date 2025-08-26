@@ -39,15 +39,14 @@ class UseItemMenu : Menu
                     validInput = true;
                     break;
                 case "1":
-                    player.UseItem(player.Inventory[1], out noItemUse);
-                    validInput = true;
-                    break;
-                case "2":
                     noItemUse = true;
                     validInput = true;
                     break;
                 default:
                     validInput = false;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Falscher Input");
+                    Console.ForegroundColor = ConsoleColor.White;
                     break;
             }
         }

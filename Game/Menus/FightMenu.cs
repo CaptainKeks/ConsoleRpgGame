@@ -11,6 +11,7 @@ class FightMenu : Menu
 
     private void DisplayMenu(Charakter player, List<Charakter> enemies)
     {
+        Console.Clear();
         Console.ForegroundColor = ConsoleColor.Cyan;
         Console.WriteLine("Kampf beginnt:");
         Console.ForegroundColor = ConsoleColor.White;
@@ -31,6 +32,8 @@ class FightMenu : Menu
     }
     public FightMenu(Charakter player)
     {
+        Random rnd = new Random();
+        cmb.EnemyCount = rnd.Next(1, 3);
         bool isFinished = false;
         bool isLevelFinished = true;
         List<Charakter> newEnemies = [];
@@ -38,8 +41,7 @@ class FightMenu : Menu
         {
             if (isLevelFinished)
             {
-                Random rnd = new Random();
-                var generatedEnemies = new EnemyGenerator(new Ork(), rnd.Next(1, 3), cmb);
+                var generatedEnemies = new EnemyGenerator(new Ork(), cmb.EnemyCount, cmb);
                 newEnemies = generatedEnemies.Enemies;
             }
             isLevelFinished = false;
@@ -66,13 +68,12 @@ class FightMenu : Menu
             if (isLevelFinished)
             {
                 Random rnd = new Random();
-                var generatedEnemies = new EnemyGenerator(new Ork(), rnd.Next(1, 3), cmb);
+                var generatedEnemies = new EnemyGenerator(new Ork(), cmb.EnemyCount, cmb);
                 newEnemies = generatedEnemies.Enemies;
             }
             isLevelFinished = false;
             cmb.Turn = 0;
             cmb.Turn++;
-            cmb.Round++;
             FightLevel(player, newEnemies, cmb, out isFinished, out isLevelFinished);
             if (isLevelFinished)
             {
@@ -195,7 +196,10 @@ class FightMenu : Menu
                     Menu nextMenu = new UseItemMenu(player, out bool noItemUsed);
                     DisplayMenu(player, enemies);
                     if (noItemUsed)
+                    {
+                        PrintRoundAndTurn(cmb);
                         PrintAndPlayerMove(player, enemies);
+                    }
                     validInput = true;
                     break;
                 case "4":

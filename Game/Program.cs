@@ -7,7 +7,7 @@ class Programm
 {
     public static void Main()
     {
-        var player = SaveAndLoadJson.LoadGame();
+        var player = SaveAndLoadJson.LoadGame(out bool succeeded);
         Menu startMenu = new StartMenu(player);
         HandleInput(player);
     }
@@ -32,7 +32,12 @@ class Programm
                     Menu nextMenu = new CharakterMenu(newPlayer);
                     break;
                 case "2":
-                    player = SaveAndLoadJson.LoadGame();
+                    player = SaveAndLoadJson.LoadGame(out bool succeeded);
+                    if (!succeeded)
+                    {
+                        Console.ReadKey();
+                        break;
+                    }
                     cmb = SaveAndLoadJson.LoadFight();
                     player.IsLoadedFromFile = true;
                     nextMenu = new FightMenu(player, cmb);

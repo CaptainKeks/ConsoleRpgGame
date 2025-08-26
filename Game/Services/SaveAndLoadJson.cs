@@ -46,7 +46,7 @@ static class SaveAndLoadJson
         }
     }
 
-    public static Charakter LoadGame()
+    public static Charakter LoadGame(out bool succeded)
     {
         try
         {
@@ -57,11 +57,17 @@ static class SaveAndLoadJson
             var player = new Charakter();
             string text = File.ReadAllText(AppContext.BaseDirectory + "savegame.json");
             player = JsonConvert.DeserializeObject<Charakter>(text, settings);
+            succeded = true;
             return player;
         }
         catch (Exception ex)
         {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Fehler: ");
             Console.WriteLine(ex.Message);
+            Console.WriteLine("Erstelle zuerst ein Neues Spiel.");
+            Console.ForegroundColor = ConsoleColor.White;
+            succeded = false;
             return new Charakter();
         }
     }

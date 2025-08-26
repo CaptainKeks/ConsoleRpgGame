@@ -1,5 +1,4 @@
-﻿
-namespace Game.Charakters;
+﻿namespace Game.Charakters;
 
 public enum BaseValue
 {
