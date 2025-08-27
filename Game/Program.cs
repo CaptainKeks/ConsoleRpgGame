@@ -7,7 +7,7 @@ class Programm
 {
     public static void Main()
     {
-        var player = SaveAndLoadJson.LoadGame(out bool succeeded);
+        var player = SaveAndLoadJson.LoadGame(out _);
         Menu startMenu = new StartMenu(player);
         HandleInput(player);
     }

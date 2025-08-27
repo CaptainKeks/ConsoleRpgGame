@@ -1,4 +1,6 @@
 ﻿
+using Game.Items;
+
 namespace Game.Charakters;
 
 interface IEntity
@@ -23,5 +25,4 @@ interface IEntity
     double GetWisdomValue();
     void SpecialAttack(Charakter defender);
     void UpgradeBaseValue(BaseValue baseValue);
-    void UseItem(Item item, out bool noItemUsed);
 }

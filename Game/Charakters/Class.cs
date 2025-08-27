@@ -1,4 +1,6 @@
-﻿namespace Game.Charakters;
+﻿using Game.Items;
+
+namespace Game.Charakters;
 
 public abstract class Class
 {

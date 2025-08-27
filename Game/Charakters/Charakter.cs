@@ -1,14 +1,18 @@
-﻿namespace Game.Charakters;
+﻿using Game.Items;
+
+namespace Game.Charakters;
 
 public enum BaseValue
 {
     Attack,
     Defense,
     Wisdom,
-    Health
+    Health,
+    HealthPotion,
+    PoisenPotion
 }
 
-class Charakter : IEntity
+public class Charakter : IEntity
 {
     public Charakter() { }
     public string Name { get; set; }
@@ -21,7 +25,8 @@ class Charakter : IEntity
     public Class Class { get; set; }
     public bool IsLoadedFromFile { get; set; } = false;
     public List<Item> Inventory { get; set; } = [];
-    public MetaProgression MetaProgression { get; set; } = new MetaProgression(attack: 0, defense: 0, wisdom: 0, health: 0, gold: 0, wins: 0, losses: 0, price: 20);
+    public List<StatusEffekt> StatusEffekts { get; set; } = [];
+    public MetaProgression MetaProgression { get; set; } = new MetaProgression(attack: 0, defense: 0, wisdom: 0, health: 0, healthPotion: 0, poisonPotion: 0, gold: 0, wins: 0, losses: 0, price: 20);
 
     /// <summary>
     /// Attackiert den mitgegeben Charakter und zieht die Defence von der Attacke ab.
@@ -53,6 +58,7 @@ class Charakter : IEntity
     {
         InDefensePosition = true;
         Console.WriteLine($"Ich {Name} gehe in die AbwehrPosition und bekomme bei meinem nächsten Angriff nur 50% Schaden.");
+        Console.ReadKey();
     }
 
     private void PrintAttackMessage(Charakter defender, double realDamage)
@@ -93,7 +99,7 @@ class Charakter : IEntity
     {
         noItemUsed = true;
         double healed = MaxHealth - CurrentHealth > item.Value ? item.Value : MaxHealth - CurrentHealth;
-        if (item.Type == ItemType.HeilTrank)
+        if (item is HeilTrank)
         {
             if (item.Count > 0)
             {
@@ -153,6 +159,12 @@ class Charakter : IEntity
                 break;
             case BaseValue.Health:
                 UpgradeBaseValues(MetaProgression, m => m.Health, (m, v) => m.Health = v, "Health", 5);
+                break;
+            case BaseValue.HealthPotion:
+                UpgradeBaseValues(MetaProgression, m => m.HealthPotion, (m, v) => m.HealthPotion = v, "HealthPotion", 5);
+                break;
+            case BaseValue.PoisenPotion:
+                UpgradeBaseValues(MetaProgression, m => m.PoisonPotion, (m, v) => m.PoisonPotion = v, "PoisonPotion", 1);
                 break;
             default:
                 break;

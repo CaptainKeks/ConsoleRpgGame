@@ -1,7 +1,9 @@
 ﻿using Game.Charakters;
 using Game.Combat;
 using Game.Helper;
+using Game.Items;
 using Game.Menus.FinishMenus;
+using System.Numerics;
 
 namespace Game.Menus;
 class FightMenu : Menu
@@ -87,15 +89,16 @@ class FightMenu : Menu
     private void FightLevel(Charakter player, List<Charakter> enemies, CombatValues cmb, out bool isFinished, out bool isLevelFinished)
     {
         DisplayMenu(player, enemies);
-        PrintRoundAndTurn(cmb);
-        PrintAndPlayerMove(player, enemies);
+        PrintMenuRoundAndTurn(cmb);
+        PrintStatusEffekts(player, enemies);
+        PrintMenuAndPlayerMove(player, enemies);
         (isFinished, isLevelFinished) = TryIfHealthIsZero(player, enemies, cmb);
         Console.Clear();
 
         DisplayMenu(player, enemies);
         cmb.Turn++;
-        PrintRoundAndTurn(cmb);
-        PrintAndEnemyMove(player, enemies);
+        PrintMenuRoundAndTurn(cmb);
+        PrintMenuAndEnemyMove(player, enemies);
         (isFinished, isLevelFinished) = TryIfHealthIsZero(player, enemies, cmb);
         player.InDefensePosition = false;
         SaveAndLoadJson.SaveGame(player);
@@ -103,7 +106,19 @@ class FightMenu : Menu
         Console.Clear();
     }
 
-    private void PrintRoundAndTurn(CombatValues cmb)
+    private void PrintStatusEffekts(Charakter player, List<Charakter> enemies)
+    {
+        foreach (var enemy in enemies)
+        {
+            foreach (StatusEffekt effekt in player.StatusEffekts)
+                effekt.ApplyStatusAffect(enemy, player);
+
+            foreach (StatusEffekt effekt in enemy.StatusEffekts)
+                effekt.ApplyStatusAffect(player, enemy);
+        }
+    }
+
+    private void PrintMenuRoundAndTurn(CombatValues cmb)
     {
         Console.ForegroundColor = ConsoleColor.Magenta;
         Console.WriteLine($"Level: {cmb.Level}");
@@ -113,16 +128,18 @@ class FightMenu : Menu
         Console.WriteLine($"Runde: {cmb.Round} Zug: {cmb.Turn}                          ");
         Console.ForegroundColor = ConsoleColor.White;
     }
-    private void PrintAndEnemyMove(Charakter player, List<Charakter> enemies)
+    private void PrintMenuAndEnemyMove(Charakter player, List<Charakter> enemies)
     {
         Console.WriteLine("Der/Die Gegner ist/sind am Zug.");
         Console.WriteLine();
         foreach (var enemie in enemies)
             enemie.Attack(player);
+        if (player.StatusEffekts.Count < 1)
+            player.StatusEffekts.Add(new StatusEffekt("Gift", "Fügt jede Runde dem Gegner 5 Schaden zu kann gestäckt werden.", 1, 5));
         Console.Write("Drücke [Enter] für den nächsten Zug.");
     }
 
-    private void PrintAndPlayerMove(Charakter player, List<Charakter> enemies)
+    private void PrintMenuAndPlayerMove(Charakter player, List<Charakter> enemies)
     {
         Console.WriteLine("Dein Zug. Wähle eine Aktion: ");
         Console.WriteLine("[1] Angreifen");
@@ -193,12 +210,12 @@ class FightMenu : Menu
                     validInput = true;
                     break;
                 case "3":
-                    Menu nextMenu = new UseItemMenu(player, out bool noItemUsed);
+                    Menu nextMenu = new UseItemMenu(player, enemies.Last(), out bool noItemUsed);
                     DisplayMenu(player, enemies);
                     if (noItemUsed)
                     {
-                        PrintRoundAndTurn(cmb);
-                        PrintAndPlayerMove(player, enemies);
+                        PrintMenuRoundAndTurn(cmb);
+                        PrintMenuAndPlayerMove(player, enemies);
                     }
                     validInput = true;
                     break;
